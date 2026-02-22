@@ -1,5 +1,5 @@
 # Stage 1: Build Frontend
-FROM node:18-alpine AS frontend-builder
+FROM node:20-alpine AS frontend-builder
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
@@ -7,7 +7,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Build Backend
-FROM node:18-alpine AS backend-builder
+FROM node:20-alpine AS backend-builder
 WORKDIR /app
 COPY server/package.json server/package-lock.json ./
 RUN npm ci
@@ -15,7 +15,7 @@ COPY server/ .
 RUN npm run build
 
 # Stage 3: Production Runtime
-FROM node:18-alpine
+FROM node:20-alpine
 WORKDIR /app
 
 # Copy built frontend assets
