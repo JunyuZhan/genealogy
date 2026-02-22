@@ -31,6 +31,7 @@ import ContextMenu from './ContextMenu.vue';
 const props = defineProps<{
   members: Member[];
   rootId: string;
+  highlightId?: string;
 }>();
 
 const emit = defineEmits<{
@@ -40,6 +41,7 @@ const emit = defineEmits<{
   (e: 'edit-cemetery', memberId: string): void;
   (e: 'delete', memberId: string): void;
   (e: 'worship', memberId: string): void;
+  (e: 'select', memberId: string): void;
 }>();
 
 const containerRef = ref<HTMLElement | null>(null);
@@ -171,11 +173,13 @@ function update(source: d3.HierarchyNode<D3MemberNode>) {
   // Enter nodes
   const nodeEnter = node.enter().append('g')
     .attr('class', 'node')
+    .attr('id', d => `node-${d.data.id}`)
     .attr('transform', () => `translate(${source.x ?? 0},${source.y ?? 0})`)
     .attr('cursor', 'pointer')
     .on('click', (_event, d) => {
         toggleChildren(d);
         update(d); // Update from clicked node
+        emit('select', d.data.id);
     })
     .on('contextmenu', (event, d) => {
         handleContextMenu(event, d);
@@ -249,6 +253,7 @@ function update(source: d3.HierarchyNode<D3MemberNode>) {
   // Enter links
   const linkEnter = link.enter().insert('path', '.node')
     .attr('class', 'link')
+    .attr('id', d => `link-${d.target.data.id}`)
     .attr('fill', 'none')
     .attr('stroke', '#cbd5e1')
     .attr('stroke-width', 1.5)
@@ -274,6 +279,40 @@ function update(source: d3.HierarchyNode<D3MemberNode>) {
         return diagonal(o, o);
     })
     .remove();
+
+  // Highlight Path
+  if (props.highlightId) {
+    const targetNode = nodes.find(d => d.data.id === props.highlightId);
+    if (targetNode) {
+      let current: d3.HierarchyNode<D3MemberNode> | null = targetNode;
+      while (current) {
+        // Highlight Node
+        g.select(`#node-${current.data.id} rect`)
+          .transition().duration(300)
+          .attr('stroke', '#f59e0b') // Amber-500
+          .attr('stroke-width', 4);
+        
+        // Highlight Link
+        if (current.parent) {
+             g.select(`#link-${current.data.id}`)
+              .transition().duration(300)
+              .attr('stroke', '#f59e0b')
+              .attr('stroke-width', 3);
+        }
+        current = current.parent;
+      }
+    }
+  } else {
+     // Reset Styles
+     g.selectAll('g.node rect')
+        .transition().duration(300)
+        .attr('stroke', d => (d as any).data.gender === 'M' ? '#1e40af' : '#be123c')
+        .attr('stroke-width', 2);
+     g.selectAll('path.link')
+        .transition().duration(300)
+        .attr('stroke', '#cbd5e1')
+        .attr('stroke-width', 1.5);
+  }
 }
 
 // Custom diagonal generator for elbow/curved lines

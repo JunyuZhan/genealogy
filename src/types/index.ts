@@ -76,6 +76,10 @@ export interface Member {
   lastVisitedAt?: string;     // 最后祭扫时间
   visitCount?: number;        // 祭扫次数
   
+  // 联系方式 (可选)
+  contact?: string;           // 电话/微信
+  photo?: string;             // 头像/照片URL
+
   // 隐私控制
   publicFields?: string[];    // 公开的字段列表
 }

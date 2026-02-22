@@ -1,10 +1,10 @@
 <template>
   <div class="container mx-auto p-4 h-screen flex flex-col">
     <!-- Header -->
-    <div class="flex justify-between items-center mb-4 no-print">
+    <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4 no-print">
       <h1 class="text-2xl font-bold">世系表 (谱书模式)</h1>
-      <div class="flex gap-4">
-        <button @click="printBook" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded shadow text-sm flex items-center gap-1 transition-colors">
+      <div class="flex flex-wrap justify-center gap-4 w-full md:w-auto">
+        <button @click="printBook" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded shadow text-sm flex items-center gap-1 transition-colors touch-manipulation">
           <span>🖨️</span> 打印/导出PDF
         </button>
         <!-- Style Toggles -->
@@ -12,44 +12,46 @@
           <button 
             @click="style = 'european'"
             :class="{'bg-white shadow text-blue-600 font-bold': style === 'european', 'text-gray-500 hover:text-gray-700': style !== 'european'}"
-            class="px-4 py-1 rounded transition-all text-sm"
+            class="px-4 py-2 rounded transition-all text-sm touch-manipulation"
           >
             欧式排版
           </button>
           <button 
             @click="style = 'su'"
             :class="{'bg-white shadow text-blue-600 font-bold': style === 'su', 'text-gray-500 hover:text-gray-700': style !== 'su'}"
-            class="px-4 py-1 rounded transition-all text-sm"
+            class="px-4 py-2 rounded transition-all text-sm touch-manipulation"
           >
             苏式排版
           </button>
         </div>
-        <router-link to="/tree" class="text-blue-500 hover:underline flex items-center">返回族谱树</router-link>
+        <router-link to="/tree" class="text-blue-500 hover:underline flex items-center px-2 py-2 touch-manipulation">返回族谱树</router-link>
       </div>
     </div>
 
     <div class="flex-1 bg-white shadow-lg rounded overflow-hidden flex flex-col border border-gray-200">
       <!-- Toolbar -->
-      <div class="p-2 border-b flex gap-4 items-center bg-gray-50 px-4 no-print">
+      <div class="p-2 border-b flex flex-col sm:flex-row gap-4 items-center bg-gray-50 px-4 no-print">
         <button 
           @click="showIndex = !showIndex" 
           :class="{'bg-blue-100 text-blue-700 border-blue-300': showIndex, 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100': !showIndex}"
-          class="px-3 py-1.5 rounded flex items-center gap-2 text-sm border transition-colors shadow-sm"
+          class="px-3 py-2 rounded flex items-center gap-2 text-sm border transition-colors shadow-sm w-full sm:w-auto justify-center touch-manipulation"
         >
           <span>📑</span> 
           <span>字辈索引</span>
         </button>
         
-        <div class="h-6 w-px bg-gray-300 mx-2"></div>
+        <div class="hidden sm:block h-6 w-px bg-gray-300 mx-2"></div>
 
-        <label class="flex items-center gap-2 text-sm cursor-pointer select-none text-gray-700 hover:text-gray-900">
-          <input type="checkbox" v-model="showSpouses" class="rounded text-blue-600 focus:ring-blue-500" />
-          显示配偶
-        </label>
-        <label class="flex items-center gap-2 text-sm cursor-pointer select-none text-gray-700 hover:text-gray-900">
-          <input type="checkbox" v-model="showBio" class="rounded text-blue-600 focus:ring-blue-500" />
-          显示生平
-        </label>
+        <div class="flex gap-4 w-full sm:w-auto justify-center">
+          <label class="flex items-center gap-2 text-sm cursor-pointer select-none text-gray-700 hover:text-gray-900 touch-manipulation p-2">
+            <input type="checkbox" v-model="showSpouses" class="rounded text-blue-600 focus:ring-blue-500 w-5 h-5" />
+            显示配偶
+          </label>
+          <label class="flex items-center gap-2 text-sm cursor-pointer select-none text-gray-700 hover:text-gray-900 touch-manipulation p-2">
+            <input type="checkbox" v-model="showBio" class="rounded text-blue-600 focus:ring-blue-500 w-5 h-5" />
+            显示生平
+          </label>
+        </div>
       </div>
 
       <!-- Content -->

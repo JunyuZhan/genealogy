@@ -1,4 +1,4 @@
-import { type Member, RelationshipType } from '../types';
+import type { Member } from '../types';
 
 export function exportGEDCOM(members: Member[]): string {
   let gedcom = "0 HEAD\n1 SOUR GENEALOGY_APP\n1 GEDC\n2 VERS 5.5.1\n2 FORM LINEAGE-LINKED\n1 CHAR UTF-8\n";
@@ -24,14 +24,6 @@ export function exportGEDCOM(members: Member[]): string {
     // For simplicity, we just export INDI for now or reconstruct families.
   });
 
-  // Reconstruct Families
-  // Map parents to families
-  const families = new Map<string, { husb?: string, wife?: string, children: string[] }>();
-  
-  // This is complex because GEDCOM is family-centric.
-  // We'll do a simplified export: Just INDI records for now.
-  // Full GEDCOM requires constructing FAM records for every couple.
-  
   gedcom += "0 TRLR\n";
   return gedcom;
 }
@@ -92,7 +84,11 @@ export function importGEDCOM(gedcom: string): Member[] {
       }
     } else if (currentMember) {
       if (tag === 'NAME') {
-        currentMember.name = value.replace(/\//g, '').trim();
+        const parts = value.split('/');
+        currentMember.name = parts[0]?.trim() || '';
+        if (parts.length > 1) {
+          currentMember.generationWord = parts[1]?.trim() || '';
+        }
       } else if (tag === 'SEX') {
         currentMember.gender = value.trim() === 'F' ? 'F' : 'M';
       } else if (tag === 'BIRT') {

@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { query } from '../utils/db';
 import { createError } from '../middleware/errorHandler';
-import { authenticate, optionalAuth } from '../middleware/auth';
+import { authenticate, optionalAuth, AuthRequest } from '../middleware/auth';
 
 const router = Router();
 
@@ -138,7 +138,7 @@ router.get('/me', authenticate, async (req: Request, res: Response, next: NextFu
     const result = await query(
       `SELECT id, username, email, phone, real_name, nickname, avatar, role, branch_id, created_at
        FROM users WHERE id = $1`,
-      [req.user!.id]
+      [(req as AuthRequest).user!.id]
     );
 
     if (result.rows.length === 0) {
@@ -165,7 +165,7 @@ router.put('/me', authenticate, async (req: Request, res: Response, next: NextFu
            updated_at = NOW()
        WHERE id = $5
        RETURNING id, username, email, phone, real_name, nickname`,
-      [email, phone, real_name, nickname, req.user!.id]
+      [email, phone, real_name, nickname, (req as AuthRequest).user!.id]
     );
 
     res.json({ success: true, data: result.rows[0] });
@@ -181,7 +181,7 @@ router.put('/password', authenticate, async (req: Request, res: Response, next: 
 
     const result = await query(
       'SELECT password_hash FROM users WHERE id = $1',
-      [req.user!.id]
+      [(req as AuthRequest).user!.id]
     );
 
     const validPassword = await bcrypt.compare(oldPassword, result.rows[0].password_hash);
@@ -192,7 +192,7 @@ router.put('/password', authenticate, async (req: Request, res: Response, next: 
     const newHash = await bcrypt.hash(newPassword, 10);
     await query(
       'UPDATE users SET password_hash = $1, updated_at = NOW() WHERE id = $2',
-      [newHash, req.user!.id]
+      [newHash, (req as AuthRequest).user!.id]
     );
 
     res.json({ success: true, message: '密码修改成功' });

@@ -1,0 +1,38 @@
+[
+  {
+    "id": "101",
+    "type": "info_update",
+    "title": "李某某信息修正申请",
+    "submitter": "李某某",
+    "branch": "李氏大宗祠总支",
+    "date": "2024-02-21"
+  },
+  {
+    "id": "102",
+    "type": "new_member",
+    "title": "新增成员：李小小",
+    "submitter": "李大壮",
+    "branch": "城南分支",
+    "date": "2024-02-20"
+  },
+  {
+    "id": "103",
+    "type": "merge_request",
+    "title": "分支合并请求：岭北支系",
+    "submitter": "李北",
+    "branch": "李氏大宗祠总支",
+    "date": "2024-02-19"
+  },
+  {
+    "id": "104",
+    "type": "cemetery_photo",
+    "title": "墓冢照片审核：张大郎",
+    "submitter": "李大壮",
+    "branch": "李氏大宗祠总支",
+    "date": "2024-02-23",
+    "payload": {
+      "photoUrl": "https://placehold.co/400x300?text=Cemetery+Photo",
+      "description": "2024年清明拍摄"
+    }
+  }
+]

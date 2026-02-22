@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1",
+    "name": "李太公",
+    "generation": 1,
+    "birthDate": "1350",
+    "deathDate": "1420",
+    "description": "始迁祖，于洪武年间迁居此地，开基立业。"
+  },
+  {
+    "id": "2",
+    "name": "李二公",
+    "generation": 2,
+    "birthDate": "1380",
+    "deathDate": "1450",
+    "description": "二世祖，耕读传家，修桥铺路，德泽乡里。"
+  },
+  {
+    "id": "3",
+    "name": "李三公",
+    "generation": 3,
+    "birthDate": "1410",
+    "deathDate": "1480",
+    "description": "三世祖，中举人，官至知县，清正廉明。"
+  }
+]

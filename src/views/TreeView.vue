@@ -1,32 +1,38 @@
 <template>
-  <div class="container mx-auto p-4 h-screen flex flex-col">
-    <div class="flex justify-between items-center mb-4">
-      <div class="flex items-center gap-4">
+  <div class="container mx-auto p-4 h-[calc(100vh-4rem)] flex flex-col">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full md:w-auto">
         <h1 class="text-2xl font-bold">族谱树</h1>
-        <button @click="showWorshipMap = true" class="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1 rounded shadow text-sm flex items-center gap-1">
-          <span>🗺️</span> 祭扫地图
-        </button>
-        <button @click="exportImage" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded shadow text-sm flex items-center gap-1">
-          <span>🖼️</span> 导出图片
-        </button>
-        <router-link to="/book" class="bg-stone-600 hover:bg-stone-700 text-white px-3 py-1 rounded shadow text-sm flex items-center gap-1">
-          <span>📖</span> 谱书模式
-        </router-link>
+        <GlobalSearch :members="members" @select="onSelectMember" class="w-full sm:w-auto" />
+        
+        <div class="flex gap-2 overflow-x-auto pb-2 sm:pb-0 w-full sm:w-auto">
+          <button @click="showWorshipMap = true" class="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1 rounded shadow text-sm flex items-center gap-1 whitespace-nowrap">
+            <span>🗺️</span> 祭扫地图
+          </button>
+          <button @click="exportImage" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded shadow text-sm flex items-center gap-1 whitespace-nowrap">
+            <span>🖼️</span> 导出
+          </button>
+          <router-link to="/book" class="bg-stone-600 hover:bg-stone-700 text-white px-3 py-1 rounded shadow text-sm flex items-center gap-1 whitespace-nowrap">
+            <span>📖</span> 谱书
+          </router-link>
+        </div>
       </div>
-      <router-link to="/" class="text-blue-500 hover:underline">返回首页</router-link>
+      <router-link to="/" class="text-blue-500 hover:underline text-sm hidden md:block">返回首页</router-link>
     </div>
     
     <div class="flex-1 border rounded bg-white shadow-lg overflow-hidden relative">
       <FamilyTree 
         v-if="rootId" 
         :members="members" 
-        :root-id="rootId" 
+        :root-id="rootId"
+        :highlight-id="highlightMemberId"
         @add-child="onAddChild"
         @add-spouse="onAddSpouse"
         @edit="onEdit"
         @edit-cemetery="onEditCemetery"
         @delete="onDelete"
         @worship="onWorship"
+        @select="onSelectMember"
       />
       <div v-else class="flex items-center justify-center h-full text-gray-400">
         加载中...
@@ -54,23 +60,39 @@
         @close="showWorshipMap = false"
         @worship="onWorship"
       />
+
+      <MemberDetailSidebar
+        :is-visible="showSidebar"
+        :member="sidebarMember"
+        :all-members="members"
+        @close="showSidebar = false"
+        @select="onSelectMember"
+        @edit="onEdit"
+        @delete="onDelete"
+        @edit-cemetery="onEditCemetery"
+        @worship="onWorship"
+        @add-sibling="onAddSibling"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useMemberStore } from '../stores/memberStore';
 import { storeToRefs } from 'pinia';
 import FamilyTree from '../components/family-tree/FamilyTree.vue';
 import CemeteryMap from '../components/map/CemeteryMap.vue';
 import Memorial from '../components/worship/Memorial.vue';
 import WorshipMap from '../components/worship/WorshipMap.vue';
+import GlobalSearch from '../components/common/GlobalSearch.vue';
+import MemberDetailSidebar from '../components/family-tree/MemberDetailSidebar.vue';
 import { type CemeteryInfo } from '../types';
 
 const memberStore = useMemberStore();
 const { members } = storeToRefs(memberStore);
 const rootId = ref<string>('');
+const highlightMemberId = ref<string>('');
 
 // Map State
 const showMap = ref(false);
@@ -84,6 +106,11 @@ const showWorshipMap = ref(false);
 const memorialMemberId = ref('');
 const memorialMemberName = ref('');
 
+// Sidebar State
+const showSidebar = ref(false);
+const sidebarMemberId = ref('');
+const sidebarMember = computed(() => memberStore.getMember(sidebarMemberId.value) || null);
+
 onMounted(() => {
   // Find root
   const root = members.value.find(m => m.generation === 1);
@@ -91,6 +118,27 @@ onMounted(() => {
     rootId.value = root.id;
   }
 });
+
+function onSelectMember(memberId: string) {
+  sidebarMemberId.value = memberId;
+  highlightMemberId.value = memberId;
+  showSidebar.value = true;
+  
+  // Optional: Center tree on member (requires exposing method from FamilyTree)
+  // For now, just showing sidebar is good.
+}
+
+function onAddSibling(memberId: string) {
+  const name = prompt('请输入兄弟姐妹姓名:');
+  const genderStr = prompt('请输入性别 (M/F):', 'M');
+  if (name && genderStr) {
+    const gender = genderStr.toUpperCase() === 'F' ? 'F' : 'M';
+    const result = memberStore.addSibling(memberId, { name, gender });
+    if (!result) {
+        alert('无法添加兄弟姐妹：该成员没有父母信息。');
+    }
+  }
+}
 
 function onAddChild(memberId: string) {
   const name = prompt('请输入子女姓名:');

@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
+import path from 'path';
 
 import { errorHandler } from './middleware/errorHandler';
 import { rateLimiter } from './middleware/rateLimiter';
@@ -27,10 +28,12 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // 中间件
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: false, // Disable CSP for simplicity in this demo, enable/configure in production
+}));
 app.use(cors());
 app.use(express.json());
-app.use(rateLimiter);
+app.use('/api', rateLimiter); // Apply rate limiter only to API routes
 
 // 路由
 app.use('/api/auth', authRoutes);
@@ -53,9 +56,22 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Serve static files from the Vue frontend app
+const frontendPath = path.join(__dirname, '../../dist');
+app.use(express.static(frontendPath));
+
+// Handle SPA routing: return index.html for any unknown non-API routes
+app.get('*', (req, res) => {
+  if (!req.path.startsWith('/api')) {
+    res.sendFile(path.join(frontendPath, 'index.html'));
+  } else {
+    res.status(404).json({ success: false, error: 'API Endpoint Not Found' });
+  }
+});
+
 // 错误处理
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-  console.log(`宗族数字化平台 API 服务运行在 http://localhost:${PORT}`);
+  console.log(`宗族数字化平台服务运行在 http://localhost:${PORT}`);
 });

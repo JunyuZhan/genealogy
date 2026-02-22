@@ -29,7 +29,7 @@
        <div v-if="children.length > 1" class="absolute -top-4 h-0.5 bg-stone-800" 
             :style="{ left: firstChildOffset + 'px', right: lastChildOffset + 'px' }"></div>
 
-       <div v-for="(child, index) in children" :key="child.id" class="child-branch flex flex-col items-center relative" ref="childRefs">
+       <div v-for="child in children" :key="child.id" class="child-branch flex flex-col items-center relative">
           <!-- Vertical line to child -->
           <div class="absolute -top-4 w-0.5 h-4 bg-stone-800"></div>
           <SuNode :member="child" :members="members" :show-spouses="showSpouses" />
@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted, nextTick } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import { type Member, RelationshipType } from '../../types';
 import SuNode from './SuNode.vue';
 
@@ -62,7 +62,6 @@ const children = computed(() => {
 // Dynamic line calculation (mocked for simplicity, ideally needs measuring DOM)
 const firstChildOffset = ref(0);
 const lastChildOffset = ref(0);
-const childRefs = ref<HTMLElement[]>([]);
 
 onMounted(() => {
   // Simple approximation: lines connect centers of first and last child

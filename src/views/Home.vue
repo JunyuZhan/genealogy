@@ -31,21 +31,21 @@
     </header>
 
     <!-- 0.1.2 Banner -->
-    <div class="relative bg-stone-900 h-[400px] flex items-center justify-center overflow-hidden">
+    <div class="relative bg-stone-900 h-[300px] md:h-[400px] flex items-center justify-center overflow-hidden">
       <div class="absolute inset-0 opacity-40">
         <img src="https://images.unsplash.com/photo-1599940824399-b87987ce179a?q=80&w=2000&auto=format&fit=crop" class="w-full h-full object-cover" />
       </div>
       <div class="relative z-10 text-center text-white max-w-4xl px-4">
-        <h2 class="text-5xl font-serif font-bold mb-6 tracking-widest text-amber-50 drop-shadow-lg">颍川世泽 长发其祥</h2>
-        <p class="text-xl text-gray-200 mb-8 font-light tracking-wide leading-relaxed">
-          慎终追远，民德归厚矣。<br/>
+        <h2 class="text-3xl md:text-5xl font-serif font-bold mb-4 md:mb-6 tracking-widest text-amber-50 drop-shadow-lg">颍川世泽 长发其祥</h2>
+        <p class="text-base md:text-xl text-gray-200 mb-6 md:mb-8 font-light tracking-wide leading-relaxed">
+          慎终追远，民德归厚矣。<br class="hidden md:block"/>
           家族不仅仅是血脉的延续，更是精神的传承。
         </p>
-        <div class="flex justify-center gap-4">
-          <router-link to="/tree" class="px-8 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-full font-bold shadow-lg transition-all hover:scale-105">
+        <div class="flex flex-col md:flex-row justify-center gap-4">
+          <router-link to="/tree" class="px-6 py-2 md:px-8 md:py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-full font-bold shadow-lg transition-all hover:scale-105 text-sm md:text-base">
             查阅族谱
           </router-link>
-          <button class="px-8 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/30 text-white rounded-full font-bold transition-all">
+          <button class="px-6 py-2 md:px-8 md:py-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/30 text-white rounded-full font-bold transition-all text-sm md:text-base">
             了解家族历史
           </button>
         </div>
@@ -210,45 +210,6 @@
         </div>
       </div>
     </main>
-
-    <!-- 0.1.7 Footer -->
-    <footer class="bg-gray-900 text-gray-400 py-12 mt-12">
-      <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-        <div>
-          <h4 class="text-white font-bold text-lg mb-4">陈氏宗族</h4>
-          <p class="text-sm leading-relaxed mb-4">
-            敦宗睦族，积德累仁。<br/>
-            数字化传承，让家族记忆永存。
-          </p>
-        </div>
-        <div>
-          <h4 class="text-white font-bold mb-4">快速链接</h4>
-          <ul class="space-y-2 text-sm">
-            <li><router-link to="/tree" class="hover:text-white">族谱浏览</router-link></li>
-            <li><a href="#" class="hover:text-white">祭扫纪念</a></li>
-            <li><a href="#" class="hover:text-white">家族名人</a></li>
-            <li><a href="#" class="hover:text-white">联系我们</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4 class="text-white font-bold mb-4">联系方式</h4>
-          <ul class="space-y-2 text-sm">
-            <li>📍 地址：xx省xx市xx县陈家大院</li>
-            <li>📧 邮箱：contact@chen-family.org</li>
-            <li>📞 电话：010-12345678</li>
-          </ul>
-        </div>
-        <div>
-          <h4 class="text-white font-bold mb-4">管理员入口</h4>
-          <router-link to="/login" class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded text-sm transition-colors inline-block">
-            管理后台登录
-          </router-link>
-        </div>
-      </div>
-      <div class="border-t border-gray-800 pt-8 text-center text-xs">
-        <p>&copy; 2024 陈氏宗族数字化平台. All rights reserved.</p>
-      </div>
-    </footer>
   </div>
 </template>
 

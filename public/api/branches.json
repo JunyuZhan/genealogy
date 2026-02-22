@@ -1,0 +1,25 @@
+[
+  {
+    "id": "1",
+    "name": "李氏大宗祠总支",
+    "ancestor": "李太公",
+    "moveDate": "洪武三年",
+    "description": "位于祖居地，负责统筹全族事务，保存有最完整的族谱档案。",
+    "contactPerson": "李宗长",
+    "contactPhone": "13800138000",
+    "memberCount": 1250,
+    "pendingReviews": 3,
+    "isMain": true
+  },
+  {
+    "id": "2",
+    "name": "城南分支",
+    "ancestor": "李四公",
+    "moveDate": "乾隆二十年",
+    "description": "迁居城南发展，主要从事商业，人丁兴旺。",
+    "contactPerson": "李商隐",
+    "contactPhone": "13900139000",
+    "memberCount": 480,
+    "pendingReviews": 1
+  }
+]

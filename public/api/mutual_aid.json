@@ -1,0 +1,35 @@
+[
+  {
+    "id": "1",
+    "title": "2024年度家族奖学金计划",
+    "type": "education",
+    "description": "为激励家族子弟勤奋向学，特设立本年度奖学金，奖励考入重点大学的优秀学子。",
+    "goal": 50000,
+    "raised": 32000,
+    "date": "2024-02-01",
+    "recentDonors": ["李明", "李华", "李强"],
+    "donorCount": 45
+  },
+  {
+    "id": "2",
+    "title": "修缮祠堂紧急募捐",
+    "type": "emergency",
+    "description": "老祠堂屋顶受暴雨影响出现漏水，急需修缮以保护文物安全。",
+    "goal": 20000,
+    "raised": 18500,
+    "date": "2024-01-15",
+    "recentDonors": ["李建国", "李伟"],
+    "donorCount": 28
+  },
+  {
+    "id": "3",
+    "title": "宗亲李某某医疗救助",
+    "type": "medical",
+    "description": "宗亲李某某不幸患重病，家庭困难，望各位宗亲伸出援手。",
+    "goal": 100000,
+    "raised": 12000,
+    "date": "2024-02-10",
+    "recentDonors": ["李红", "李军"],
+    "donorCount": 15
+  }
+]
