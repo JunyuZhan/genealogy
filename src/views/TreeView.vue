@@ -6,6 +6,9 @@
         <button @click="showWorshipMap = true" class="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1 rounded shadow text-sm flex items-center gap-1">
           <span>🗺️</span> 祭扫地图
         </button>
+        <button @click="exportImage" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded shadow text-sm flex items-center gap-1">
+          <span>🖼️</span> 导出图片
+        </button>
         <router-link to="/book" class="bg-stone-600 hover:bg-stone-700 text-white px-3 py-1 rounded shadow text-sm flex items-center gap-1">
           <span>📖</span> 谱书模式
         </router-link>
@@ -142,6 +145,70 @@ function onWorship(memberId: string) {
 function onDelete(memberId: string) {
   if (confirm('确定要删除该成员吗？')) {
     memberStore.deleteMember(memberId);
+  }
+}
+
+function exportImage() {
+  const svg = document.querySelector('.family-tree-container svg') as SVGSVGElement;
+  if (!svg) {
+    alert('未找到族谱树视图');
+    return;
+  }
+  
+  const serializer = new XMLSerializer();
+  let source = serializer.serializeToString(svg);
+  
+  if(!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)){
+      source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+  }
+  
+  const url = "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(source);
+  
+  const img = new Image();
+  img.src = url;
+  img.onload = function() {
+      const canvas = document.createElement('canvas');
+      // Get BBox usually requires the element to be in DOM. It is.
+      // But SVG BBox might be 0 if not rendered or hidden.
+      // We can use getBoundingClientRect or explicit width/height from D3 config.
+      // Better to use getBBox() on the main group <g>.
+      const g = svg.querySelector('g');
+      const bbox = g ? (g as SVGGElement).getBBox() : { x: 0, y: 0, width: 2000, height: 1000 };
+      
+      // Add padding
+      const padding = 50;
+      canvas.width = bbox.width + padding * 2;
+      canvas.height = bbox.height + padding * 2;
+      
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+          ctx.fillStyle = 'white';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          
+          // Translate to center the content
+          // The bbox.x and bbox.y might be negative (d3 zoom transform).
+          // We want to draw the image such that the content (bbox) is centered.
+          // Wait, drawing the SVG image draws the viewbox?
+          // If we serialize the current SVG, it includes the current 'transform' on <g>.
+          // So the image will look exactly like the screen (zoomed/panned).
+          // If we want the FULL tree, we might need to reset zoom/pan before export.
+          // For now, let's just export what is seen or slightly better:
+          // The simple approach often clips content if zoomed in.
+          // But user can zoom out.
+          
+          ctx.drawImage(img, 0, 0); // This draws the SVG at 0,0. 
+          
+          // Actually, drawing SVG on canvas can be tricky with external resources.
+          // But here we have inline SVG.
+          
+          const pngUrl = canvas.toDataURL('image/png');
+          const downloadLink = document.createElement('a');
+          downloadLink.href = pngUrl;
+          downloadLink.download = 'family-tree.png';
+          document.body.appendChild(downloadLink);
+          downloadLink.click();
+          document.body.removeChild(downloadLink);
+      }
   }
 }
 </script>

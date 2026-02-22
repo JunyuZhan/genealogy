@@ -1,9 +1,12 @@
 <template>
   <div class="container mx-auto p-4 h-screen flex flex-col">
     <!-- Header -->
-    <div class="flex justify-between items-center mb-4">
+    <div class="flex justify-between items-center mb-4 no-print">
       <h1 class="text-2xl font-bold">世系表 (谱书模式)</h1>
       <div class="flex gap-4">
+        <button @click="printBook" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded shadow text-sm flex items-center gap-1 transition-colors">
+          <span>🖨️</span> 打印/导出PDF
+        </button>
         <!-- Style Toggles -->
         <div class="flex bg-gray-100 p-1 rounded shadow-inner">
           <button 
@@ -27,7 +30,7 @@
 
     <div class="flex-1 bg-white shadow-lg rounded overflow-hidden flex flex-col border border-gray-200">
       <!-- Toolbar -->
-      <div class="p-2 border-b flex gap-4 items-center bg-gray-50 px-4">
+      <div class="p-2 border-b flex gap-4 items-center bg-gray-50 px-4 no-print">
         <button 
           @click="showIndex = !showIndex" 
           :class="{'bg-blue-100 text-blue-700 border-blue-300': showIndex, 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100': !showIndex}"
@@ -107,9 +110,33 @@ function onSelectMember(memberId: string) {
     }, 2000);
   }
 }
+
+function printBook() {
+  window.print();
+}
 </script>
 
 <style scoped>
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  .container {
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .flex-1 {
+    overflow: visible !important;
+    height: auto !important;
+  }
+  .shadow-lg {
+    box-shadow: none !important;
+  }
+  .border {
+    border: none !important;
+  }
+}
+
 .bg-paper {
   background-color: #fdfbf7;
   background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23d6d3ce' fill-opacity='0.1'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' /%3E%3C/g%3E%3C/svg%3E");

@@ -103,6 +103,10 @@ export const useMemberStore = defineStore('member', () => {
     return newSpouse;
   }
 
+  function setMembers(newMembers: Member[]) {
+    members.value = newMembers;
+  }
+
   return {
     members,
     getMember,
@@ -110,6 +114,7 @@ export const useMemberStore = defineStore('member', () => {
     updateMember,
     deleteMember,
     addChild,
-    addSpouse
+    addSpouse,
+    setMembers
   };
 });
