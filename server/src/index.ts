@@ -72,6 +72,10 @@ app.get('*', (req, res) => {
 // 错误处理
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`宗族数字化平台服务运行在 http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`宗族数字化平台服务运行在 http://localhost:${PORT}`);
+  });
+}
+
+export default app;

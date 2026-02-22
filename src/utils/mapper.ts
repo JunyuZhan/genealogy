@@ -4,9 +4,7 @@
 
 export const toCamel = (s: string): string => {
   return s.replace(/([-_][a-z])/ig, ($1) => {
-    return $1.toUpperCase()
-      .replace('-', '')
-      .replace('_', '');
+    return ($1[1] || '').toUpperCase();
   });
 };
 

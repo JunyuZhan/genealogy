@@ -16,12 +16,27 @@ export interface TreeNode extends d3.HierarchyNode<Member> {
  */
 export function buildTreeData(members: Member[], rootId: string): Member | null {
   const memberMap = new Map<string, Member>();
-  members.forEach(m => memberMap.set(m.id, { ...m, children: [] })); // Clone to avoid mutating original
+  members.forEach(m => memberMap.set(m.id, { ...m, children: [] }));
 
   const root = memberMap.get(rootId);
   if (!root) return null;
 
-  return null; 
+  // Build parent-child relationships from family links
+  members.forEach(m => {
+    const member = memberMap.get(m.id);
+    if (!member || !m.children) return;
+    
+    m.children.forEach(childLink => {
+      const childMember = memberMap.get(childLink.targetId);
+      if (childMember) {
+        if (!member.children) member.children = [];
+        // Add Member object, not FamilyLink
+        (member.children as unknown as Member[]).push(childMember);
+      }
+    });
+  });
+
+  return root;
 }
 
 export interface D3MemberNode extends Omit<Member, 'children' | 'parents'> {

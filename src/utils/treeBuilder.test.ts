@@ -23,15 +23,28 @@ describe('utils/treeBuilder.ts', () => {
   });
 
   describe('buildTreeData', () => {
-    it('should return null for now (stub)', () => {
-      const member = createMockMember({ id: '1' });
+    it('should return root member when found', () => {
+      const member = createMockMember({ id: '1', name: 'Root' });
       const result = buildTreeData([member], '1');
-      expect(result).toBeNull();
+      expect(result).not.toBeNull();
+      expect(result?.name).toBe('Root');
     });
 
     it('should return null if root not found', () => {
       const result = buildTreeData([], '1');
       expect(result).toBeNull();
+    });
+
+    it('should build parent-child relationships', () => {
+      const father = createMockMember({
+        id: 'father',
+        name: 'Father',
+        children: [{ targetId: 'son', relationship: RelationshipType.BIOLOGICAL, role: 'son' }]
+      });
+      const son = createMockMember({ id: 'son', name: 'Son' });
+
+      const result = buildTreeData([father, son], 'father');
+      expect(result).not.toBeNull();
     });
   });
 
