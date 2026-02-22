@@ -6,6 +6,9 @@
         <button @click="showWorshipMap = true" class="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1 rounded shadow text-sm flex items-center gap-1">
           <span>🗺️</span> 祭扫地图
         </button>
+        <router-link to="/book" class="bg-stone-600 hover:bg-stone-700 text-white px-3 py-1 rounded shadow text-sm flex items-center gap-1">
+          <span>📖</span> 谱书模式
+        </router-link>
       </div>
       <router-link to="/" class="text-blue-500 hover:underline">返回首页</router-link>
     </div>
