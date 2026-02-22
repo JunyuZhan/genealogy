@@ -14,6 +14,7 @@
       :is-visible="menuVisible"
       :position="menuPosition"
       :member-name="selectedMember?.name || ''"
+      :is-alive="selectedMember?.isAlive"
       @close="menuVisible = false"
       @action="handleMenuAction"
     />
@@ -38,6 +39,7 @@ const emit = defineEmits<{
   (e: 'edit', memberId: string): void;
   (e: 'edit-cemetery', memberId: string): void;
   (e: 'delete', memberId: string): void;
+  (e: 'worship', memberId: string): void;
 }>();
 
 const containerRef = ref<HTMLElement | null>(null);
@@ -47,16 +49,16 @@ const gRef = ref<SVGGElement | null>(null);
 // Menu State
 const menuVisible = ref(false);
 const menuPosition = ref({ x: 0, y: 0 });
-const selectedMember = ref<{ id: string; name: string } | null>(null);
+const selectedMember = ref<{ id: string; name: string; isAlive: boolean } | null>(null);
 
 function handleContextMenu(event: MouseEvent, d: d3.HierarchyNode<D3MemberNode>) {
   event.preventDefault();
   menuVisible.value = true;
   menuPosition.value = { x: event.clientX, y: event.clientY };
-  selectedMember.value = { id: d.data.id, name: d.data.name };
+  selectedMember.value = { id: d.data.id, name: d.data.name, isAlive: d.data.isAlive };
 }
 
-function handleMenuAction(action: 'add-child' | 'add-spouse' | 'edit' | 'delete' | 'edit-cemetery') {
+function handleMenuAction(action: 'add-child' | 'add-spouse' | 'edit' | 'delete' | 'edit-cemetery' | 'worship') {
   if (!selectedMember.value) return;
   
   if (action === 'add-child') emit('add-child', selectedMember.value.id);
@@ -64,6 +66,7 @@ function handleMenuAction(action: 'add-child' | 'add-spouse' | 'edit' | 'delete'
   else if (action === 'edit') emit('edit', selectedMember.value.id);
   else if (action === 'delete') emit('delete', selectedMember.value.id);
   else if (action === 'edit-cemetery') emit('edit-cemetery', selectedMember.value.id);
+  else if (action === 'worship') emit('worship', selectedMember.value.id);
 
   menuVisible.value = false;
 }

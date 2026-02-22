@@ -1,7 +1,12 @@
 <template>
   <div class="container mx-auto p-4 h-screen flex flex-col">
     <div class="flex justify-between items-center mb-4">
-      <h1 class="text-2xl font-bold">族谱树</h1>
+      <div class="flex items-center gap-4">
+        <h1 class="text-2xl font-bold">族谱树</h1>
+        <button @click="showWorshipMap = true" class="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1 rounded shadow text-sm flex items-center gap-1">
+          <span>🗺️</span> 祭扫地图
+        </button>
+      </div>
       <router-link to="/" class="text-blue-500 hover:underline">返回首页</router-link>
     </div>
     
@@ -15,6 +20,7 @@
         @edit="onEdit"
         @edit-cemetery="onEditCemetery"
         @delete="onDelete"
+        @worship="onWorship"
       />
       <div v-else class="flex items-center justify-center h-full text-gray-400">
         加载中...
@@ -27,6 +33,21 @@
         @close="showMap = false"
         @save="onSaveCemetery"
       />
+
+      <Memorial
+        v-if="showMemorial"
+        :is-visible="showMemorial"
+        :member-id="memorialMemberId"
+        :member-name="memorialMemberName"
+        @close="showMemorial = false"
+      />
+
+      <WorshipMap 
+        v-if="showWorshipMap"
+        :members="members"
+        @close="showWorshipMap = false"
+        @worship="onWorship"
+      />
     </div>
   </div>
 </template>
@@ -37,6 +58,8 @@ import { useMemberStore } from '../stores/memberStore';
 import { storeToRefs } from 'pinia';
 import FamilyTree from '../components/family-tree/FamilyTree.vue';
 import CemeteryMap from '../components/map/CemeteryMap.vue';
+import Memorial from '../components/worship/Memorial.vue';
+import WorshipMap from '../components/worship/WorshipMap.vue';
 import { type CemeteryInfo } from '../types';
 
 const memberStore = useMemberStore();
@@ -48,6 +71,12 @@ const showMap = ref(false);
 const editingMemberId = ref<string>('');
 const currentCemetery = ref<CemeteryInfo | null>(null);
 const currentMemberName = ref('');
+
+// Worship State
+const showMemorial = ref(false);
+const showWorshipMap = ref(false);
+const memorialMemberId = ref('');
+const memorialMemberName = ref('');
 
 onMounted(() => {
   // Find root
@@ -96,6 +125,15 @@ function onSaveCemetery(data: CemeteryInfo) {
   if (editingMemberId.value) {
     memberStore.updateMember(editingMemberId.value, { cemetery: data });
   }
+}
+
+function onWorship(memberId: string) {
+  const member = memberStore.getMember(memberId);
+  if (!member) return;
+  
+  memorialMemberId.value = memberId;
+  memorialMemberName.value = member.name;
+  showMemorial.value = true;
 }
 
 function onDelete(memberId: string) {

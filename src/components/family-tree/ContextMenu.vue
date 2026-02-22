@@ -39,6 +39,14 @@
     </button>
     
     <button 
+      v-if="!isAlive"
+      @click="emit('action', 'worship')" 
+      class="w-full text-left px-4 py-2 hover:bg-amber-50 text-sm text-amber-700 flex items-center gap-2"
+    >
+      <span>🙏</span> 在线祭扫
+    </button>
+    
+    <button 
       @click="emit('action', 'delete')" 
       class="w-full text-left px-4 py-2 hover:bg-red-50 text-sm text-red-600 flex items-center gap-2"
     >
@@ -60,10 +68,11 @@ defineProps<{
   isVisible: boolean;
   position: { x: number; y: number };
   memberName: string;
+  isAlive?: boolean;
 }>();
 
 const emit = defineEmits<{
   (e: 'close'): void;
-  (e: 'action', action: 'add-child' | 'add-spouse' | 'edit' | 'delete' | 'edit-cemetery'): void;
+  (e: 'action', action: 'add-child' | 'add-spouse' | 'edit' | 'delete' | 'edit-cemetery' | 'worship'): void;
 }>();
 </script>
